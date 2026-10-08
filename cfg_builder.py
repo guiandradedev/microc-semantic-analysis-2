@@ -5,7 +5,7 @@ from __future__ import annotations
 import load_previous  # Disponibiliza os módulos das etapas anteriores.
 
 from ast_nodes import Block, FunctionDecl, IfStmt, Stmt, WhileStmt
-from cfg import BlockId, CFG, Jump
+from cfg import BlockId, CFG, Jump, ScopeExit
 
 
 class CFGBuilder:
@@ -25,11 +25,20 @@ class CFGBuilder:
         permanecem nele. Comandos de controle podem mudar a continuação.
         None indica que os caminhos deste bloco não alcançam o próximo comando.
         """
+        for stmt in block.statemens:
+            if current is None:
+                break
+            current = self._build_statement(stmt, current)
 
-        raise NotImplementedError("implemente CFGBuilder._build_block")
+        if current is not None:
+            scope = block.metadata["scope"]
+            self.cfg.blocks[current].operations.append(ScopeExit(scope))
+
 
     def _build_statement(self, statement: Stmt, current: BlockId) -> BlockId | None:
         """TODO: incorpore um comando ao CFG e devolva sua continuação normal."""
+
+        
 
         raise NotImplementedError("implemente CFGBuilder._build_statement")
 

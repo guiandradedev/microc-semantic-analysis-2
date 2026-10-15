@@ -160,7 +160,8 @@ class NameResolver:
             return
 
         if isinstance(stmt, ReturnStmt):
-            self._resolve_expr(stmt.value, scope)
+            if stmt.value is not None:
+                self._resolve_expr(stmt.value, scope)
             return
 
         if isinstance(stmt, PrintStmt):
